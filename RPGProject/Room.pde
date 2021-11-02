@@ -109,6 +109,8 @@ class Room {
   void moveRoom () {
     myHero.loc.x = width - myHero.loc.x;
     myHero.loc.y = height - myHero.loc.y;
+    
+    if (myHero.hp <= 90) myHero.hp += 10;
         
     //So I don't run into an infinite loop of the player getting sent back and forth because they are always within range of the door
     if (myHero.loc.x < width/2) myHero.loc.x += 10;
