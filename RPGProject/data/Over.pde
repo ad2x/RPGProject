@@ -1,3 +1,0 @@
-void over () {
-  background(Black);
-}
