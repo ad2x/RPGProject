@@ -24,11 +24,6 @@ class Room {
   }
   
   public void show () {
-    strokeWeight(8);
-    stroke(White);
-    
-    line(0, 0, width, height);
-    line(0, height, width, 0);
     
     //Exits
     if (northExit != #FFFFFF) {
@@ -53,6 +48,7 @@ class Room {
 
     fill(Black);
     stroke(White);
+    strokeWeight(8);
     rect((width - sx)/2, (height - sx)/2, sx, sy);
   }
   

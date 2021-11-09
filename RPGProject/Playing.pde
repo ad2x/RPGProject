@@ -41,4 +41,12 @@ void playing () {
     
     i++;
   } 
+  
+  i = 0;
+  while (i < mapCells.size()) {
+    MapCell myCell = mapCells.get(i);
+    myCell.show();
+    
+    i++;
+  }
 }

@@ -4,6 +4,8 @@ import processing.javafx.*;
 //== Arrays ==
 ArrayList<GameObject> myObjects;
 ArrayList<DarknessCell> myCells;
+ArrayList<MapCell> mapCells;
+//I will never confuse these ^^^
 
 //== Keyboard ==
 boolean upkey, downkey, leftkey, rightkey, spacekey;
@@ -71,7 +73,7 @@ Hero myHero;
 //Darkness Cells
 float dcx;
 float dcy;
-float dcs = 10;
+float dcs = 5;
 
 //-- Upgrade Select --
 
@@ -83,7 +85,8 @@ void setup() {
   size(800, 800, FX2D);
   
   myObjects = new ArrayList<GameObject>();
-  myCells = new ArrayList<DarknessCell>(  );
+  myCells = new ArrayList<DarknessCell>();
+  mapCells = new ArrayList<MapCell>();
   
   //-- General --
   
@@ -127,7 +130,7 @@ void setup() {
   
   currentRoom = new Room(myHero.roomX, myHero.roomY);
     
-  while (dcx != width - dcs && dcy != height - dcs) {
+  while (dcx != width && dcy != height) {
     while (dcx < height) {
       myCells.add(new DarknessCell(dcx, dcy, dcs));
       dcx += dcs;
@@ -136,6 +139,25 @@ void setup() {
     dcy += dcs;
     dcx = 0;
   }
+  
+  int mx = 0;
+  int my = 0;
+  dcx = dcy = 0;
+  dcs = MapCell.size;
+  //Reusing some darkness cells variables
+  while (my < map.height) {
+    mapCells.add(new MapCell(mx, my, dcx, dcy));
+    mx++;
+    dcx += dcs;
+    println(dcx, dcy);
+    if (mx >= map.width) {
+      dcx = 0;
+      dcy += dcs;
+      mx = 0;
+      my++;
+    }
+  }
+  
   
   //-- Upgrade Select --
   
