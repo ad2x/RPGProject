@@ -6,6 +6,7 @@ ArrayList<GameObject> myObjects;
 ArrayList<DarknessCell> myCells;
 ArrayList<MapCell> mapCells;
 //I will never confuse these ^^^
+ArrayList<Room> myRooms;
 
 //== Keyboard ==
 boolean upkey, downkey, leftkey, rightkey, spacekey;
@@ -87,6 +88,7 @@ void setup() {
   myObjects = new ArrayList<GameObject>();
   myCells = new ArrayList<DarknessCell>();
   mapCells = new ArrayList<MapCell>();
+  myRooms = new ArrayList<Room>();
   
   //-- General --
   
@@ -128,7 +130,8 @@ void setup() {
   
   myHero = new Hero(); 
   
-  currentRoom = new Room(myHero.roomX, myHero.roomY);
+  currentRoom = new StartingRoom(myHero.roomX, myHero.roomY);
+  myRooms.add(currentRoom);
     
   while (dcx != width && dcy != height) {
     while (dcx < height) {

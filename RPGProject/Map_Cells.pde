@@ -9,6 +9,9 @@ class MapCell {
   float bx = 45;
   float by = height - 155;
   
+  //Used to make it so rooms only appear on map once revealed (player has entered them)
+  boolean discovered;
+  
   MapCell (int mx_, int my_, float x_, float y_) {
     x = x_;
     y = y_;
@@ -28,19 +31,37 @@ class MapCell {
     } else {
       transparency = 255;
     }
-        
-    fill(c, transparency);
+    
+    fill(Black, transparency);
+    
+    //!!!! NEED TO FIGURE OUT WHY JUST USING c DOESN'T WORK RN
+    if (discovered) {
+      fill(White, transparency);
+    }
     
     if (myHero.roomX == mx && myHero.roomY == my) {
       //Did this so it wouldn't mess with the frameCount var itself and therefore the death animation
       int frameCount_ = frameCount;
       if ((frameCount_ %= 30) > 15) {
-        fill(White, transparency);
+        fill(#646464, transparency);
       } else {
-        fill(Black, transparency);
+        fill(White, transparency);
       }
     }
     
     square(x + bx, y + by, size);
+  }
+  
+  void discovery () {
+    int i = 0;
+    while (i < myRooms.size()) {
+      Room aRoom = myRooms.get(i);
+      
+      if (aRoom.roomX == mx && aRoom.roomY == my) {
+        discovered = true;
+       }
+      
+      i++;
+    }
   }
 }

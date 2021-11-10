@@ -5,6 +5,15 @@ void playing () {
   currentRoom.act();
   
   int i = 0;
+  while (i < mapCells.size()) {
+    MapCell aCell = mapCells.get(i);
+    
+    aCell.discovery();
+    
+    i++;
+  }
+  
+  i = 0;
   while (i < myObjects.size()) {
     GameObject myObj = myObjects.get(i);
     myObj.show();

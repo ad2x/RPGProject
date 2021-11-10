@@ -4,16 +4,14 @@ class Room {
   int roomX, roomY;
   
   //Room width
-  float sx, sy;
+  float sx = 4*height/5;
+  float sy = 4*height/5;
   
   //Exits
   color northExit, eastExit, southExit, westExit;
   boolean northToggle, eastToggle, southToggle, westToggle;
   
   Room (int roomX_, int roomY_) {
-    sx = 4*width/5;
-    sy = 4*height/5;
-    
     roomX = roomX_;
     roomY = roomY_;
     
@@ -76,21 +74,17 @@ class Room {
   
   public void act () {
     if (doorCheck(width/2, height/2 - sy/2, northToggle)) {
-      moveRoom();
       myHero.roomY--;
-      currentRoom = new Room (myHero.roomX, myHero.roomY);
+      moveRoom();
     } else if (doorCheck(width/2 + sx/2, height/2, eastToggle)) {
       myHero.roomX++;
       moveRoom();
-      currentRoom = new Room (myHero.roomX, myHero.roomY);
     } else if (doorCheck(width/2, height/2 + sy/2, southToggle)) {
       myHero.roomY++;
       moveRoom();
-      currentRoom = new Room (myHero.roomX, myHero.roomY);
     } else if (doorCheck(width/2 - sx/2, height/2, westToggle)) {
       myHero.roomX--;
       moveRoom();
-      currentRoom = new Room (myHero.roomX, myHero.roomY);
     }
   }
   
@@ -106,12 +100,32 @@ class Room {
     myHero.loc.x = width - myHero.loc.x;
     myHero.loc.y = height - myHero.loc.y;
     
-    if (myHero.hp <= 90) myHero.hp += 10;
+    //Commented until I implement checker to make sure you can't just go back and forth for free hp
+    //if (myHero.hp <= 90) myHero.hp += 10;
         
     //So I don't run into an infinite loop of the player getting sent back and forth because they are always within range of the door
     if (myHero.loc.x < width/2) myHero.loc.x += 10;
     if (myHero.loc.x > width/2) myHero.loc.x -= 10;
     if (myHero.loc.y < height/2) myHero.loc.y += 10;
     if (myHero.loc.y > height/2) myHero.loc.y -= 10;
+    
+    //Checks if new room is already saved, if so it goes to that, if not it makes a new one
+    int i = 0;
+    while (i < myRooms.size()) {
+      Room cRoom = myRooms.get(i);
+      
+      if (cRoom.roomX == myHero.roomX && cRoom.roomY == myHero.roomY) {
+        i = myRooms.size();
+        
+        currentRoom = cRoom;
+      }
+      
+      i++;
+      
+      if (i == myRooms.size()) {
+        currentRoom = new Room (myHero.roomX, myHero.roomY);
+        myRooms.add(currentRoom);
+      }
+    }
   }
 }
