@@ -4,11 +4,6 @@ void playing () {
   currentRoom.show();
   currentRoom.act();
   
-  //Didn't add playerChar to the myObjects array because it made things 
-  //more difficult and there wasn't really any benefit
-  myHero.act();
-  if (myHero.hp > 0) myHero.show();
-  
   int i = 0;
   while (i < myObjects.size()) {
     GameObject myObj = myObjects.get(i);
@@ -21,6 +16,11 @@ void playing () {
       i++;
     }    
   } 
+  
+  //Didn't add playerChar to the myObjects array because it made things 
+  //more difficult and there wasn't really any benefit
+  myHero.act();
+  if (myHero.hp > 0) myHero.show();
   
   i = 0;
   while (i < myCells.size()) {

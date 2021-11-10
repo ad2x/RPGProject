@@ -149,7 +149,6 @@ void setup() {
     mapCells.add(new MapCell(mx, my, dcx, dcy));
     mx++;
     dcx += dcs;
-    println(dcx, dcy);
     if (mx >= map.width) {
       dcx = 0;
       dcy += dcs;

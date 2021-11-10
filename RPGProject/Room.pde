@@ -46,7 +46,7 @@ class Room {
       westToggle = true;
     }
 
-    fill(Black);
+    fill(#050505);
     stroke(White);
     strokeWeight(8);
     rect((width - sx)/2, (height - sx)/2, sx, sy);

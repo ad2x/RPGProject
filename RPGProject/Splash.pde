@@ -6,9 +6,9 @@ class Splash extends GameObject {
   
   //Shape of the splash particles
   int type;
-  final int circle = 0;
-  final int triangle = 1;
-  final int square = 2;
+  static final int circle = 0;
+  static final int triangle = 1;
+  static final int square = 2;
   
   //Spin while moving
   float angle;
@@ -22,7 +22,9 @@ class Splash extends GameObject {
   //Colour
   color c;
   
-  Splash (float x, float y, color c_) {
+  Splash (float x, float y, color c_, boolean pt) {
+    passthrough = pt;
+    
     //Randomizes shape
     type = (int) random(0, 3);
     
@@ -42,19 +44,22 @@ class Splash extends GameObject {
     c = c_;
   }
   
-  //If I want to force shape
-  Splash (int type_, float x, float y, color c_) {
+  //If I want to force shape, for bullets
+  Splash (int type_, float x, float y, color c_, boolean pt) {
+    passthrough = pt;
+    
     //Randomizes shape
     type = type_;
     
     //Random size
-    sizeX = sizeY = random(8, 14);
+    sizeX = sizeY = random(8, 11);
     
     //Sets initial hp to the maximum hp (needed to keep variables seperate for calculating timing)
-    hp = hplimit;
+    hp = hplimit - (int) random(0, 20);
+    hploss = hplossrate + random(0.5, 1);
     
     loc = new PVector (x, y);
-    vel = new PVector (random(-10, 10) + 1, random(-10, 10) + 1);
+    vel = new PVector (random(-5, 10) + 1, random(-5, 10) + 1);
     vel.setMag(3);
     
     c = c_;
