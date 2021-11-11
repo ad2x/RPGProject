@@ -9,7 +9,7 @@ ArrayList<MapCell> mapCells;
 ArrayList<Room> myRooms;
 
 //== Keyboard ==
-boolean upkey, downkey, leftkey, rightkey, spacekey;
+boolean upkey, downkey, leftkey, rightkey, spacekey, ekey;
 
 //== Colour Pallette ==
 //-- Black & White --
@@ -75,6 +75,12 @@ Hero myHero;
 float dcx;
 float dcy;
 float dcs = 5;
+
+//Map toggle
+boolean tmap;
+
+//Hp Bar
+HpBar myHp;
 
 //-- Upgrade Select --
 
@@ -159,6 +165,8 @@ void setup() {
       my++;
     }
   }
+  
+  myHp = new HpBar(150, 25);
   
   
   //-- Upgrade Select --
@@ -261,6 +269,9 @@ void keyPressed() {
   } else if (keyCode == 27) {
     key = 0;
   }
+  if (key == 'E') {
+    ekey = true;
+  }
 }
 
 void keyReleased() {
@@ -269,6 +280,10 @@ void keyReleased() {
   if (key == 'A' || keyCode == LEFT) leftkey = false;
   if (key == 'D' || keyCode == RIGHT) rightkey = false;
   if (key == ' ') spacekey = false;
+  if (key == 'E') {
+    ekey = false;
+    tmap = !tmap;
+  }
 }
 
 //== Random Function ==

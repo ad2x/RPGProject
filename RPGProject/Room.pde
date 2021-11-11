@@ -127,5 +127,16 @@ class Room {
         myRooms.add(currentRoom);
       }
     }
+    
+    i = 0;
+    while (i < myObjects.size()) {
+      GameObject myObj = myObjects.get(i);
+      
+      if (myObj instanceof Bullet || myObj instanceof Splash) {
+        myObjects.remove(myObj);
+      } else {
+        i++;
+      }
+    }
   }
 }

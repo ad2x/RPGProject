@@ -5,19 +5,13 @@ void playing () {
   currentRoom.act();
   
   int i = 0;
-  while (i < mapCells.size()) {
-    MapCell aCell = mapCells.get(i);
-    
-    aCell.discovery();
-    
-    i++;
-  }
-  
-  i = 0;
   while (i < myObjects.size()) {
     GameObject myObj = myObjects.get(i);
-    myObj.show();
-    myObj.act();
+    
+    if (myObj.objRoom == currentRoom) {
+      myObj.show();
+      myObj.act();
+    }
 
     if (myObj.hp <= 0) {
       myObjects.remove(i);
@@ -51,11 +45,17 @@ void playing () {
     i++;
   } 
   
-  i = 0;
-  while (i < mapCells.size()) {
-    MapCell myCell = mapCells.get(i);
-    myCell.show();
+  if (tmap) {
+    i = 0;
+    while (i < mapCells.size()) {
+      MapCell myCell = mapCells.get(i);
+      
+      myCell.discovery();
+      myCell.show();
+      
+      i++;
+    }
     
-    i++;
+    myHp.show(125, 225);
   }
 }

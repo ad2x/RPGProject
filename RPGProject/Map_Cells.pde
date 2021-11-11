@@ -2,12 +2,12 @@ class MapCell {
   
   float x, y;
   int mx, my;
-  static final float size = 10;
+  static final float size = 15;
   color c;
   
   //Distance between map and origin
-  float bx = 45;
-  float by = height - 155;
+  float bx = 50;
+  float by = 50;
   
   //Used to make it so rooms only appear on map once revealed (player has entered them)
   boolean discovered;
@@ -27,9 +27,9 @@ class MapCell {
     //Becomes more transparent closer player is to it
     float transparency;
     if (dist(x+bx, y+by, myHero.loc.x, myHero.loc.y) <= 150) {
-      transparency = map(dist(x+bx, y+by, myHero.loc.x, myHero.loc.y), 0, sqrt(pow(currentRoom.sx, 2) + pow(currentRoom.sy, 2)), 80, 255);
+      transparency = map(dist(x+bx, y+by, myHero.loc.x, myHero.loc.y), 0, sqrt(pow(currentRoom.sx, 2) + pow(currentRoom.sy, 2)), 80, 220);
     } else {
-      transparency = 255;
+      transparency = 220;
     }
     
     fill(Black, transparency);

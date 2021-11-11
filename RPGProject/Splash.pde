@@ -23,6 +23,8 @@ class Splash extends GameObject {
   color c;
   
   Splash (float x, float y, color c_, boolean pt) {
+    super(currentRoom);
+    
     passthrough = pt;
     
     //Randomizes shape
@@ -46,6 +48,8 @@ class Splash extends GameObject {
   
   //If I want to force shape, for bullets
   Splash (int type_, float x, float y, color c_, boolean pt) {
+    super(currentRoom);
+    
     passthrough = pt;
     
     //Randomizes shape
