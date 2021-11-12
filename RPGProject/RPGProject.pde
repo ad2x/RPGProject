@@ -168,7 +168,6 @@ void setup() {
   
   myHp = new HpBar(150, 25);
   
-  
   //-- Upgrade Select --
   
   //-- Save Select --
@@ -296,4 +295,10 @@ boolean boolRandom () {
   } else {
     return false;
   }
+}
+
+//== Radius of Light Circle ==
+//Made it outside of the DarknessCell class so it could be used anywhere I needed
+float darknessDist () {
+  return map(myHero.hp, 100, 0, DarknessCell.radius, 95);
 }

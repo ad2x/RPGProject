@@ -57,5 +57,5 @@ void playing () {
     }
     
     myHp.show(125, 225);
-  }
+  }  
 }

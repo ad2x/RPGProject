@@ -73,18 +73,34 @@ class Room {
   }
   
   public void act () {
-    if (doorCheck(width/2, height/2 - sy/2, northToggle)) {
-      myHero.roomY--;
-      moveRoom();
-    } else if (doorCheck(width/2 + sx/2, height/2, eastToggle)) {
-      myHero.roomX++;
-      moveRoom();
-    } else if (doorCheck(width/2, height/2 + sy/2, southToggle)) {
-      myHero.roomY++;
-      moveRoom();
-    } else if (doorCheck(width/2 - sx/2, height/2, westToggle)) {
-      myHero.roomX--;
-      moveRoom();
+    //Checks if all enemies have been defeated
+    boolean check = true;
+    
+    int i = 0;
+    while (i < myObjects.size()) {
+      GameObject myObj = myObjects.get(i);
+      
+      if (myObj instanceof MeleeEnemy) {
+        check = false;
+      }
+      
+      i++;
+    }
+    
+    if (check) {
+      if (doorCheck(width/2, height/2 - sy/2, northToggle)) {
+        myHero.roomY--;
+        moveRoom();
+      } else if (doorCheck(width/2 + sx/2, height/2, eastToggle)) {
+        myHero.roomX++;
+        moveRoom();
+      } else if (doorCheck(width/2, height/2 + sy/2, southToggle)) {
+        myHero.roomY++;
+        moveRoom();
+      } else if (doorCheck(width/2 - sx/2, height/2, westToggle)) {
+        myHero.roomX--;
+        moveRoom();
+      }
     }
   }
   
@@ -125,6 +141,11 @@ class Room {
       if (i == myRooms.size()) {
         currentRoom = new Room (myHero.roomX, myHero.roomY);
         myRooms.add(currentRoom);
+        
+        //Code for generating room based on colour
+        if (currentRoom.roomX == 1 && currentRoom.roomY == 2) {
+          myObjects.add(new Lurker(width/2, height/2, currentRoom));
+        }
       }
     }
     

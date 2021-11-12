@@ -46,8 +46,8 @@ class Splash extends GameObject {
     c = c_;
   }
   
-  //If I want to force shape, for bullets
-  Splash (int type_, float x, float y, color c_, boolean pt) {
+  //If I want to force shape
+  Splash (int type_, float x, float y, color c_, boolean pt, int sizeMin, int sizeMax) {
     super(currentRoom);
     
     passthrough = pt;
@@ -56,7 +56,7 @@ class Splash extends GameObject {
     type = type_;
     
     //Random size
-    sizeX = sizeY = random(8, 11);
+    sizeX = sizeY = random(sizeMin, sizeMax);
     
     //Sets initial hp to the maximum hp (needed to keep variables seperate for calculating timing)
     hp = hplimit - (int) random(0, 20);
@@ -64,7 +64,7 @@ class Splash extends GameObject {
     
     loc = new PVector (x, y);
     vel = new PVector (random(-5, 10) + 1, random(-5, 10) + 1);
-    vel.setMag(3);
+    vel.setMag(2.3);
     
     c = c_;
   }
@@ -100,6 +100,8 @@ class Splash extends GameObject {
   
   public void act () {
     super.act();
+    
+    vel.setMag(map(hp, 0, hplimit, 0.1, 3));
     
     angle += 0.35;
     hp -= hploss;
