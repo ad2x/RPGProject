@@ -11,6 +11,9 @@ class Room {
   color northExit, eastExit, southExit, westExit;
   boolean northToggle, eastToggle, southToggle, westToggle;
   
+  //Enemy check
+  boolean check = false;
+  
   Room (int roomX_, int roomY_) {
     roomX = roomX_;
     roomY = roomY_;
@@ -61,6 +64,7 @@ class Room {
     float h = 0;
     for (int r = radius; r > 0; --r) {
       fill(h);
+      if (check == false) fill(h - 255);
       ellipse(0, 0, r, r);
       if (h <= 180) {
         h += 255/r*3;
@@ -74,7 +78,7 @@ class Room {
   
   public void act () {
     //Checks if all enemies have been defeated
-    boolean check = true;
+    check = true;
     
     int i = 0;
     while (i < myObjects.size()) {
@@ -112,6 +116,10 @@ class Room {
     }
   }
   
+  //Code  for moving rooms, includes:
+  //Setting hero pos.
+  //Generating new room *if* room hasn't already been loaded
+  //Deleting bullets and splash particles upon leaving room
   void moveRoom () {
     myHero.loc.x = width - myHero.loc.x;
     myHero.loc.y = height - myHero.loc.y;
@@ -139,13 +147,15 @@ class Room {
       i++;
       
       if (i == myRooms.size()) {
-        currentRoom = new Room (myHero.roomX, myHero.roomY);
-        myRooms.add(currentRoom);
-        
-        //Code for generating room based on colour
-        if (currentRoom.roomX == 1 && currentRoom.roomY == 2) {
-          myObjects.add(new Lurker(width/2, height/2, currentRoom));
+        if (map.get(myHero.roomX, myHero.roomY) == White) {
+          currentRoom = new Room (myHero.roomX, myHero.roomY);
+        } else if (map.get(myHero.roomX, myHero.roomY) == Red) {
+          currentRoom = new LurkerRoom (myHero.roomX, myHero.roomY);
+        } else {
+          currentRoom = new Room (myHero.roomX, myHero.roomY);
         }
+        
+        myRooms.add(currentRoom);
       }
     }
     

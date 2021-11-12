@@ -65,13 +65,12 @@ class MeleeEnemy extends GameObject {
     deathAnim();
         
     //Collision
-    if (dist(myHero.loc.x, myHero.loc.y, loc.x, loc.y) <= sizeX/2 - 5 + myHero.sizeX/2) {
+    if (dist(myHero.loc.x, myHero.loc.y, loc.x, loc.y) <= sizeX/2 - 10 + myHero.sizeX/2) {
       loc.sub(vel);
     }
     
     hitTimer++;
     
-    if (dist(myHero.loc.x, myHero.loc.y, loc.x, loc.y) <= sizeX/2 + myHero.sizeX/2) loc.sub(vel);
     vel.x = myHero.loc.x - loc.x;
     vel.y = myHero.loc.y - loc.y;
     vel.setMag(speed);

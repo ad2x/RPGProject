@@ -10,7 +10,7 @@ class Lurker extends MeleeEnemy {
     
     attackDamage = 8;
     
-    speed = 2.5;
+    speed = 4;
   }
   
   void act () {

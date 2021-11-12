@@ -32,11 +32,10 @@ class MapCell {
       transparency = 220;
     }
     
-    fill(Black, transparency);
+    fill(White, transparency);
     
-    //!!!! NEED TO FIGURE OUT WHY JUST USING c DOESN'T WORK RN
     if (discovered) {
-      fill(White, transparency);
+      fill(c, transparency);
     }
     
     if (myHero.roomX == mx && myHero.roomY == my) {
@@ -45,10 +44,10 @@ class MapCell {
       if ((frameCount_ %= 30) > 15) {
         fill(#646464, transparency);
       } else {
-        fill(White, transparency);
+        fill(c, transparency);
       }
     }
-    
+
     square(x + bx, y + by, size);
   }
   

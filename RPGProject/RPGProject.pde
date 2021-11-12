@@ -36,6 +36,9 @@ color NBlue6 = #0000FF;
 
 color Black = #000000;
 color White = #FFFFFF;
+color Red = #FF0000;
+color Green = #00FF00;
+color Blue = #0000FF;
 
 //== Fonts ==
 PFont menuFont;
@@ -132,7 +135,7 @@ void setup() {
   //-- Playing --
   
   //Map
-  map = loadImage("maps/testMap.png");
+  map = loadImage("maps/colorMap.png");
   
   myHero = new Hero(); 
   
@@ -300,5 +303,5 @@ boolean boolRandom () {
 //== Radius of Light Circle ==
 //Made it outside of the DarknessCell class so it could be used anywhere I needed
 float darknessDist () {
-  return map(myHero.hp, 100, 0, DarknessCell.radius, 95);
+  return map(myHero.hp, 100, 0, DarknessCell.radius, 90);
 }

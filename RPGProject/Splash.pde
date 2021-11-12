@@ -22,6 +22,8 @@ class Splash extends GameObject {
   //Colour
   color c;
   
+  //Random shape - only used for hero
+  //Includes larger size and distance for particles etc.
   Splash (float x, float y, color c_, boolean pt) {
     super(currentRoom);
     
@@ -60,7 +62,7 @@ class Splash extends GameObject {
     
     //Sets initial hp to the maximum hp (needed to keep variables seperate for calculating timing)
     hp = hplimit - (int) random(0, 20);
-    hploss = hplossrate + random(0.5, 1);
+    hploss = hplossrate + random(0.25, 0.75);
     
     loc = new PVector (x, y);
     vel = new PVector (random(-5, 10) + 1, random(-5, 10) + 1);
