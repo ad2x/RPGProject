@@ -1,3 +1,0 @@
-void upgradesel () {
-  background(Black);
-}
