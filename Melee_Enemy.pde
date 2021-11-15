@@ -83,6 +83,8 @@ class MeleeEnemy extends GameObject {
         if (dist(myObj.loc.x, myObj.loc.y, loc.x, loc.y) <= sizeX/2 + myObj.sizeX/2) {
           hit(myHero.myWeapon.attackDamage);
           
+          myHero.myScore.killedEnemy(1);
+          
           //Outright removes bullet to skip death anim (don't want anims to overlap)
           if (hp <= 0) {
             myObjects.remove(i);

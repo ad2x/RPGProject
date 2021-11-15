@@ -1,6 +1,6 @@
 void playing () {
   background(Black);
-  
+    
   currentRoom.show();
   currentRoom.act();
   
@@ -11,7 +11,6 @@ void playing () {
     if (myObj.objRoom == currentRoom) {
       myObj.show();
       myObj.act();
-      println(myObj.hp);
     }
 
     if (myObj.hp <= 0) {

@@ -156,6 +156,8 @@ class Room {
         }
         
         myRooms.add(currentRoom);
+        
+        myHero.myScore.enterRoom(4);
       }
     }
     
