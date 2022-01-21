@@ -123,9 +123,6 @@ class Room {
   void moveRoom () {
     myHero.loc.x = width - myHero.loc.x;
     myHero.loc.y = height - myHero.loc.y;
-    
-    //Commented until I implement checker to make sure you can't just go back and forth for free hp
-    //if (myHero.hp <= 90) myHero.hp += 10;
         
     //So I don't run into an infinite loop of the player getting sent back and forth because they are always within range of the door
     if (myHero.loc.x < width/2) myHero.loc.x += 10;
@@ -138,6 +135,7 @@ class Room {
     while (i < myRooms.size()) {
       Room cRoom = myRooms.get(i);
       
+      //If i is the entered room, set the current room to i
       if (cRoom.roomX == myHero.roomX && cRoom.roomY == myHero.roomY) {
         i = myRooms.size();
         
@@ -146,11 +144,16 @@ class Room {
       
       i++;
       
+      //If the whole arraylist has been checked through and the entered room hasn't been found, append a new room (of a certain type depending on colour) and set it as the current room
       if (i == myRooms.size()) {
-        if (map.get(myHero.roomX, myHero.roomY) == White) {
-          currentRoom = new Room (myHero.roomX, myHero.roomY);
+        if (map.get(myHero.roomX, myHero.roomY) == Blue) {
+          currentRoom = new UpgradeRoom (myHero.roomX, myHero.roomY);
         } else if (map.get(myHero.roomX, myHero.roomY) == Red) {
           currentRoom = new LurkerRoom (myHero.roomX, myHero.roomY);
+        } else if (map.get(myHero.roomX, myHero.roomY) == Green) {
+          currentRoom = new Room (myHero.roomX, myHero.roomY);
+        } else if (map.get(myHero.roomX, myHero.roomY) == Gold) {
+          currentRoom = new Room (myHero.roomX, myHero.roomY);
         } else {
           currentRoom = new Room (myHero.roomX, myHero.roomY);
         }
@@ -161,6 +164,8 @@ class Room {
       }
     }
     
+    
+    //Clears the screen of bullets and particles upon entering a new room
     i = 0;
     while (i < myObjects.size()) {
       GameObject myObj = myObjects.get(i);

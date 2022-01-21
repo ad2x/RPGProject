@@ -7,13 +7,28 @@ class Hero extends GameObject {
   //Booleans for turning
   boolean upleft, up, upright, downleft, down, downright, left, right;
   
-  //For a powerup
-  boolean bright;
-  
   Weapon myWeapon;
+  
+  //Overall score
+  Score myScore;
+  
+  //== Hero Upgrades ==
+  //Hp
+  int exthp = 0;
+  int basehp = 50;
+  int maxhp = basehp + exthp*10;
+  //Speed
+  int extspeed = 0;
+  //Damage
+  int extdamage = 0;
+  
+  //Upgrade points (to spend for upgrades)
+  int upgradePoints;
   
   Hero () {
     super(currentRoom);
+    
+    myScore = new Score();
     
     speed = 0.9;
     roomX = 1;
@@ -23,11 +38,13 @@ class Hero extends GameObject {
     sizeY = 94;
     
     speedLimit = 6.5;
-    hp = 100;    
+    hp = maxhp;    
     
     myWeapon = new Weapon(20, 12, 15);
     
     invTimeLimit = 60;
+    
+    lum = 200;
   }
   
   public void show () {
@@ -57,30 +74,38 @@ class Hero extends GameObject {
       rotate(-PI/2);
     }
     
-    noStroke();
+    //Changes stroke colour the more hp you have
+    //stroke(lerp(White, NGreen6, map(exthp, 0, 4, 0, 1)));
+    stroke(NGreen6, map(exthp, 0, 4, 0, 200));
+    fill(lerp(0, 255, map(hp, 0, maxhp, 0.4, 1)));
     
-    fill(lerp(0, 255, map(hp, 0, 100, 0.4, 1)));
-    if (bright) fill(White);
+    sizeX = sizeY = map(exthp, 0, 4, 94, 110);
     
-    strokeWeight(8);
+    int strokeSize = 8;
+    
+    strokeWeight(strokeSize);
     
     //Makes everything else treat the hero's size like it's smaller than it really is in order to make collision account for strokeWeight
-    sizeX -= 8;
-    sizeY -= 8;
+    sizeX -= strokeSize;
+    sizeY -= strokeSize;
     ellipse(0, 0, sizeX, sizeY);
-    sizeX += 8;
-    sizeY += 8;
+    sizeX += strokeSize;
+    sizeY += strokeSize;
         
     fill(Black);
     
+    float exthp_ = map(exthp, 0, 4, 1, 1.15);
+    
+    noStroke();
+    
     pushMatrix();
     rotate(PI/5);
-    ellipse(-3, 27, 30, 19);
+    ellipse(-3*exthp_, 27*exthp_, 30*exthp_, 19*exthp_);
     popMatrix();
     
     pushMatrix();
     rotate(-PI/5);
-    ellipse(3, 27, 30, 19);
+    ellipse(3*exthp_, 27*exthp_, 30*exthp_, 19*exthp_);
     popMatrix();
     
     popMatrix();
@@ -91,8 +116,15 @@ class Hero extends GameObject {
     myWeapon.update();
     if (spacekey) myWeapon.shoot();
     
+    //Hp stuff
     if (hp > 0) super.act();
-    if (hp > 100) hp = 100;
+    if (hp > maxhp) hp = maxhp;
+    maxhp = basehp + exthp * 10;
+    
+    //Don't allow upgrades to go over limit
+    if (extdamage > 4) extdamage = 4;
+    if (exthp > 4) exthp = 4;
+    if (extspeed > 4) extspeed = 4;
     
     //====== Movement ======
     if (upkey) {
@@ -119,16 +151,19 @@ class Hero extends GameObject {
       vel.x /= 1.1;
     }
     
-    if (vel.x > speedLimit) {
-      vel.x = speedLimit;
-    } else if (vel.x < -speedLimit) {
-      vel.x = -speedLimit;
+    //Changes speed limit based on speed bonus
+    float speedLimit_ = speedLimit + 0.6*extspeed;
+    
+    if (vel.x > speedLimit_) {
+      vel.x = speedLimit_;
+    } else if (vel.x < -speedLimit_) {
+      vel.x = -speedLimit_;
     }
     
-    if (vel.y > speedLimit) {
-      vel.y = speedLimit;
-    } else if (vel.y < -speedLimit) {
-      vel.y = -speedLimit;
+    if (vel.y > speedLimit_) {
+      vel.y = speedLimit_;
+    } else if (vel.y < -speedLimit_) {
+      vel.y = -speedLimit_;
     }
     
     if ((upkey && leftkey) || (upkey && rightkey) || (downkey && leftkey) || (downkey && rightkey)) {
@@ -138,18 +173,31 @@ class Hero extends GameObject {
       //The reason why it's that number in particular (0.707107) is because I guessed that it probably had something to do with triangles and threw the pyth. theorum at it
       //The end result of this is that while you technically move equally as fast moving diagonally, the speed limit slows you down if you go back and forth which I like because it encourages you to not spam press buttons
       
-      if (vel.x > speedLimit*0.707107) {
-        vel.x = speedLimit*0.707107;
-      } else if (vel.x < -speedLimit*0.707107) {
-        vel.x = -speedLimit*0.707107;
+      if (vel.x > speedLimit_*0.707107) {
+        vel.x = speedLimit_*0.707107;
+      } else if (vel.x < -speedLimit_*0.707107) {
+        vel.x = -speedLimit_*0.707107;
       }
       
-      if (vel.y > speedLimit*0.707107) {
-        vel.y = speedLimit*0.707107;
-      } else if (vel.y < -speedLimit*0.707107) {
-        vel.y = -speedLimit*0.707107;
+      if (vel.y > speedLimit_*0.707107) {
+        vel.y = speedLimit_*0.707107;
+      } else if (vel.y < -speedLimit_*0.707107) {
+        vel.y = -speedLimit_*0.707107;
       }
     }
+    
+    //== Trail ==
+    //Leaves trail if player is fast enough
+    if (extspeed != 0 && (vel.x > 3 || vel.x < -3 || vel.y > 3 || vel.y < -3)) {
+      //Create more particles the faster you are
+      int rate = (int) map(extspeed, 0, 4, 35, 5);
+      if (frameCount % rate == 0) {
+        myObjects.add(new Splash(Splash.square, loc.x, loc.y, NBlue6, false, 12, 18, 0));
+        myObjects.add(new Splash(Splash.square, loc.x, loc.y, NBlue6, false, 12, 18, 0));
+        myObjects.add(new Splash(Splash.square, loc.x, loc.y, NBlue6, false, 12, 18, 0));
+      }
+    }
+    
     //=====================
     
     //== Collision ==
@@ -158,11 +206,9 @@ class Hero extends GameObject {
     while (i < myObjects.size()) {
       GameObject myObj = myObjects.get(i);
       
-      if (!(myObj instanceof Bullet) && !(myObj instanceof HealthPoint) && !(myObj instanceof Splash)) {
+      if (myObj.solid == true && myObj.objRoom == currentRoom) {
         if (dist(myHero.loc.x, myHero.loc.y, myObj.loc.x, myObj.loc.y) <= myHero.sizeX/2 - 10 + myObj.sizeX/2) {
-          float temp = vel.mag();
           vel.set(myObj.loc.x - myHero.loc.x, myObj.loc.y - myHero.loc.y);
-          vel.setMag(temp);
           vel.setMag(-1);
         }
       }
@@ -173,7 +219,7 @@ class Hero extends GameObject {
     //===============
     
     ////Testing
-    if (mousePressed && hp >= 0) hp--;
+    //if (mousePressed && hp >= 0) hp--;
     //if (spacekey) {
     //  bright = true;
     //} else {
@@ -208,4 +254,7 @@ class Hero extends GameObject {
     }
   }
   
+  public void increaseHp(int n) {
+    exthp += n;
+  }
 }

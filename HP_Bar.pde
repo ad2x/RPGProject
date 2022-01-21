@@ -27,12 +27,12 @@ class HpBar {
     noStroke();
     fill(White, transparency);
     
-    if (myHero.hp >= 0) rect(-dx/2, -dy/2, map(myHero.hp, 0, 100, 0, dx), dy, 45);
+    if (myHero.hp >= 0) rect(-dx/2, -dy/2, map(myHero.hp, 0, myHero.maxhp, 0, dx), dy, 45);
     
-    fill(map(myHero.hp, 0, 100, 255, 0), transparency);
+    fill(map(myHero.hp, 0, myHero.maxhp, 255, 0), transparency);
     textSize(12);
     
-    if (myHero.hp > 0) text((int)myHero.hp + "/100", 0, 0);
+    if (myHero.hp > 0) text((int)myHero.hp + "/" + myHero.maxhp, 0, 0);
     if (myHero.hp <= 0) text("DEAD", 0, 0);
     
     popMatrix();

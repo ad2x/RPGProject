@@ -3,24 +3,29 @@ class Weapon {
   int shotTimer;
   int threshold;
   int bulletSpeed;
+  int baseDamage;
   int attackDamage;
   
   Weapon() {
     shotTimer = 0;
     threshold = 30;
     bulletSpeed = 5;
-    attackDamage = 10;
+    baseDamage = 10;
+    attackDamage = baseDamage;
   }
   
   Weapon(int thr, int ps, int ad) {
     shotTimer = 0;
     threshold = thr;
     bulletSpeed = ps;
-    attackDamage = ad;
+    baseDamage = ad;
+    attackDamage = baseDamage;
   }
   
   void update() {
     shotTimer++;
+    
+    attackDamage = baseDamage + myHero.extdamage*5;
   }
   
   void shoot() {

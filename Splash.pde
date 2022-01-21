@@ -12,10 +12,11 @@ class Splash extends GameObject {
   
   //Spin while moving
   float angle;
+  boolean togangle;
   
   //Hp/time taken to dissapear
   static final int hplimit = 30;
-  static final float hplossrate = 0.5;
+  static final float hplossrate = 0.35;
   
   float hploss;
   
@@ -27,7 +28,7 @@ class Splash extends GameObject {
   Splash (float x, float y, color c_, boolean pt) {
     super(currentRoom);
     
-    passthrough = pt;
+    solid = pt;
     
     //Randomizes shape
     type = (int) random(0, 3);
@@ -43,16 +44,16 @@ class Splash extends GameObject {
     
     loc = new PVector (x, y);
     vel = new PVector (random(-10, 10) + 1, random(-10, 10) + 1);
-    vel.setMag(2);
+    vel.setMag(0.5);
     
     c = c_;
   }
   
   //If I want to force shape
-  Splash (int type_, float x, float y, color c_, boolean pt, int sizeMin, int sizeMax) {
+  Splash (int type_, float x, float y, color c_, boolean pt, float sizeMin, float sizeMax) {
     super(currentRoom);
     
-    passthrough = pt;
+    solid = pt;
     
     //Randomizes shape
     type = type_;
@@ -71,7 +72,63 @@ class Splash extends GameObject {
     c = c_;
   }
   
+  //Force shape and increase longevity (for speed trail)
+  Splash (int type_, float x, float y, color c_, boolean pt, float sizeMin, float sizeMax, int tog) {
+    super(currentRoom);
+    
+    solid = pt;
+    
+    //Randomizes shape
+    type = type_;
+    
+    //Random size
+    sizeX = sizeY = random(sizeMin, sizeMax);
+    
+    //Sets initial hp to the maximum hp (needed to keep variables seperate for calculating timing)
+    hp = hplimit - (int) random(0, 20);
+    hploss = hplossrate;
+    
+    loc = new PVector (x, y);
+    vel = new PVector (random(-5, 10) + 1, random(-5, 10) + 1);
+    vel.setMag(0.5);
+    
+    c = c_;
+    
+    //Slow spin
+    togangle = true;
+  }
+  
+  //Force shape and mix in gold (for upgrade orbs)
+  Splash (int type_, float x, float y, color c_, boolean pt, float sizeMin, float sizeMax, boolean tog) {
+    super(currentRoom);
+    
+    solid = pt;
+    
+    //Randomizes shape
+    type = type_;
+    
+    //Random size
+    sizeX = sizeY = random(sizeMin, sizeMax);
+    
+    //Sets initial hp to the maximum hp (needed to keep variables seperate for calculating timing)
+    hp = hplimit - (int) random(0, 5);
+    hploss = hplossrate + random(0.1, 0.2);
+    
+    loc = new PVector (x, y);
+    vel = new PVector (random(-5, 10) + 1, random(-5, 10) + 1);
+    vel.setMag(2.3);
+    
+    if (boolRand()) {
+      c = Gold;
+    } else {
+      c = c_;
+    }
+  }
+  
   public void show () {
+    //Too lazy to put in constructors
+    lum = 50;
+    
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(angle);
@@ -97,6 +154,8 @@ class Splash extends GameObject {
       rect(-sizeX/2, -sizeY/2, sizeX, sizeY);
     }
     
+    if (loc.x > 720 || loc.x < 80 || loc.y > 720 || loc.y < 80) hp = 0;
+    
     popMatrix();
   }
   
@@ -105,7 +164,8 @@ class Splash extends GameObject {
     
     vel.setMag(map(hp, 0, hplimit, 0.1, 3));
     
-    angle += 0.35;
+    if (togangle == false) angle += 0.2;
+    if (togangle) angle += 0.01;
     hp -= hploss;
   }
 }

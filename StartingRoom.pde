@@ -10,9 +10,10 @@ class StartingRoom extends Room {
     
     textSize(30);
     fill(White);
-    text("WASD to move", width/2, height/2 - 75);
-    text("Space to shoot", width/2, height/2);
-    text("E to toggle UI", width/2, height/2 + 75);
+    text("WASD to move", width/2, height/2 - 150);
+    text("Space to shoot", width/2, height/2 - 75);
+    text("E to toggle overlay", width/2, height/2);
+    text("Q for upgrade panel", width/2, height/2 + 75);
   }
   
 }

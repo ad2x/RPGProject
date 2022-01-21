@@ -4,8 +4,6 @@ class MeleeEnemy extends GameObject {
   //For hit cd
   int hitTimer;
   
-  int attackDamage;
-  
   float speed;
   
   MeleeEnemy (float x_, float y_, Room objRoom_) {
@@ -22,6 +20,10 @@ class MeleeEnemy extends GameObject {
     attackDamage = 14;
     
     speed = 1;
+    
+    solid = true;
+    
+    solid = true;
   }
   
   void show () {
@@ -35,7 +37,7 @@ class MeleeEnemy extends GameObject {
     ellipse(0, 0, sizeX, sizeY);
     
     pushMatrix();
-    rotate(-PI/3);
+    rotate(-PI/3); 
     
     fill(White);
     
@@ -74,32 +76,6 @@ class MeleeEnemy extends GameObject {
     vel.x = myHero.loc.x - loc.x;
     vel.y = myHero.loc.y - loc.y;
     vel.setMag(speed);
-    
-    int i = 0;
-    while (i < myObjects.size()) {
-      GameObject myObj = myObjects.get(i);
-      
-      if (myObj instanceof Bullet) {
-        if (dist(myObj.loc.x, myObj.loc.y, loc.x, loc.y) <= sizeX/2 + myObj.sizeX/2) {
-          hit(myHero.myWeapon.attackDamage);
-          
-          myHero.myScore.killedEnemy(1);
-          
-          //Outright removes bullet to skip death anim (don't want anims to overlap)
-          if (hp <= 0) {
-            myObjects.remove(i);
-          } else {
-            myObj.hp = 0;
-          }
-          
-          deathAnim();
-        }
-      } else if (dist(myHero.loc.x, myHero.loc.y, loc.x, loc.y) <= sizeX/2 + myHero.sizeX/2) {
-        myHero.hit(attackDamage);
-      }
-      
-      i++;
-    }
   }
   
   void deathAnim () {
@@ -116,6 +92,8 @@ class MeleeEnemy extends GameObject {
         while (i < 17) {
           myObjects.add(new Splash(Splash.triangle, loc.x, loc.y, NRed1, true, 10, 20));
           
+          myHero.myScore.killedEnemy(1);
+          
           i++;
         }
       }
@@ -127,7 +105,7 @@ class MeleeEnemy extends GameObject {
       //Not part of death anim but happens at the same time
       if (myHero.hp > 0) {
       int i = 0;
-        while (i < 5) {
+        while (i < 3) {
           myObjects.add(new HealthPoint(1, loc.x + random(-sizeX/4, sizeX/4), loc.y + random(-sizeY/4, sizeY/4)));
           i++;
         }

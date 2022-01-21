@@ -1,4 +1,3 @@
-
 import processing.javafx.*;
 
 //== Arrays ==
@@ -9,7 +8,7 @@ ArrayList<MapCell> mapCells;
 ArrayList<Room> myRooms;
 
 //== Keyboard ==
-boolean upkey, downkey, leftkey, rightkey, spacekey, ekey;
+boolean upkey, downkey, leftkey, rightkey, spacekey, ekey, qkey, esckey;
 
 //== Colour Pallette ==
 //-- Black & White --
@@ -39,6 +38,8 @@ color White = #FFFFFF;
 color Red = #FF0000;
 color Green = #00FF00;
 color Blue = #0000FF;
+color MYellow = #e1ad01;
+color Gold = #FFD700;
 
 //== Fonts ==
 PFont menuFont;
@@ -74,6 +75,9 @@ PImage map;
 
 Hero myHero;
 
+//Floor type (RG - 1, GB - 2, RB - 3)
+int ftype;
+
 //Darkness Cells
 float dcx;
 float dcy;
@@ -82,8 +86,17 @@ float dcs = 5;
 //Map toggle
 boolean tmap = true;
 
+//Upgrade toggle
+boolean upgrscr = false;
+
 //Hp Bar
 HpBar myHp;
+
+//Pause
+boolean paused;
+
+//Button
+ModeButton exitButton;
 
 //-- Upgrade Select --
 
@@ -171,6 +184,9 @@ void setup() {
   
   myHp = new HpBar(150, 25);
   
+  //Exit button
+  exitButton = new ModeButton("Exit", 25, main, Black, White, 100, 8);
+  
   //-- Upgrade Select --
   
   //-- Save Select --
@@ -243,7 +259,7 @@ void mouseReleased () {
     
   } else if (mode == playing) {
     
-    
+    if (paused && !upgrscr) exitButton.click();
     
   } else if (mode == upgradesel) {
     
@@ -261,6 +277,7 @@ void mouseReleased () {
 }
 
 void keyPressed() {
+  if (paused && keyCode != 27 && key != 'Q') key = 0;
   if (key == 'W' || keyCode == UP) upkey = true;
   if (key == 'S' || keyCode == DOWN) downkey = true;
   if (key == 'A' || keyCode == LEFT) leftkey = true;
@@ -268,11 +285,17 @@ void keyPressed() {
   if (key == ' ') spacekey = true;
   if (keyCode == 27) {
     key = 0;
-  } else if (keyCode == 27) {
-    key = 0;
+    esckey = true;
+    if (upgrscr == false) paused = !paused;
   }
   if (key == 'E') {
     ekey = true;
+    esckey = !esckey;
+  }
+  if (key == 'Q') {
+    qkey = true;
+    upgrscr = !upgrscr;
+    paused = !paused;
   }
 }
 
@@ -281,16 +304,25 @@ void keyReleased() {
   if (key == 'S' || keyCode == DOWN) downkey = false;
   if (key == 'A' || keyCode == LEFT) leftkey = false;
   if (key == 'D' || keyCode == RIGHT) rightkey = false;
-  if (key == ' ') spacekey = false;
+  if (key == ' ') {
+    spacekey = false;
+  }
+  if (keyCode == 27) {
+    key = 0;
+    esckey = false;
+  }
   if (key == 'E') {
     ekey = false;
     tmap = !tmap;
+  }
+  if (key == 'Q') {
+    qkey = false;
   }
 }
 
 //== Random Function ==
 //Didn't really belong anywhere in particular so I put it here
-boolean boolRandom () {
+boolean boolRand () {
   int rand = (int) random(0, 2);
   
   if (rand == 0) {
@@ -303,5 +335,5 @@ boolean boolRandom () {
 //== Radius of Light Circle ==
 //Made it outside of the DarknessCell class so it could be used anywhere I needed
 float darknessDist () {
-  return map(myHero.hp, 100, 0, DarknessCell.radius, 90);
+  return map(myHero.hp, myHero.maxhp, 0, DarknessCell.radius, 90);
 }
