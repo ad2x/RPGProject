@@ -2,11 +2,24 @@ class UpgradeOrb extends GameObject {
   
   //Orb upgrade type
   color c;
+  int ct;
   
-  UpgradeOrb (float x, float y, color c_, Room ObjRoom) {
+  UpgradeOrb (float x, float y, int c_, Room ObjRoom) {
     super(ObjRoom);
     
-    c = c_;
+    switch (c_) {
+      case 1: 
+        c = Red;
+        break;
+      case 2:
+        c = Green;
+        break;
+      case 3:
+        c = Blue;
+        break;
+    }
+    
+    ct = c_;
     
     loc = new PVector(x, y);
     
@@ -25,6 +38,23 @@ class UpgradeOrb extends GameObject {
     fill(Gold);
     
     ellipse(loc.x, loc.y, sizeX, sizeY);
+    
+    if (ct == 1) {
+      float cx = 0;
+      float cy = 25;
+      
+      float bx = cx*cos(radians(120)) - cy*sin(radians(120));
+      float by = cx*sin(radians(120)) + cy*cos(radians(120));
+      
+      float ax = cx*cos(radians(240)) - cy*sin(radians(240));
+      float ay = cx*sin(radians(240)) + cy*cos(radians(240));
+      
+      triangle(ax, ay, bx, by, cx, cy);
+    } else if (ct == 2) {
+      rect(-25, -25, 50, 50);
+    } else if (ct == 3) {
+      ellipse(0, 0, 50, 50);
+    }
   }
   
   void act () {
@@ -33,11 +63,12 @@ class UpgradeOrb extends GameObject {
       
       myHero.myScore.gotUpgrade(1);
       
-      if (c == NRed6) {
+      if (ct == 1) {
         myHero.extdamage++;
-      } else if (c == NGreen6) {
-        myHero.exthp++;
-      } else if (c == NBlue6) {
+      } else if (ct == 2) {
+        myHero.exthealth++;
+        myHero.increaseHp(10);
+      } else if (ct == 3) {
         myHero.extspeed++;
       }
       

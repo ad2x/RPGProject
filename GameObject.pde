@@ -15,6 +15,7 @@ class GameObject {
   
   //Luminescence
   float lum = 0;
+  color lumColor = White;
   
   //Room that object is saved to
   //Object will only be displayed or processed if in current room

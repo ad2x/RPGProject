@@ -14,21 +14,21 @@ class UpgradeRoom extends Room {
     //3 - RB
     if (ftype == 1) {
       if (boolRand()) {
-        c = NRed6;
+        c = 1;
       } else {
-        c = NGreen6;
+        c = 2;
       }
     } else if (ftype == 2) {
       if (boolRand()) {
-        c = NGreen6;
+        c = 2;
       } else {
-        c = NBlue6;
+        c = 3;
       }
     } else {
       if (boolRand()) {
-        c = NRed6;
+        c = 1;
       } else {
-        c = NBlue6;
+        c = 3;
       }
     }
     
@@ -39,6 +39,7 @@ class UpgradeRoom extends Room {
     
     myObjects.add(new UpgradeOrb(width/2, height/2, c, this));
     
-    myObjects.add(new Pedestal(width/2, height/2, this));
+    if (c != Red) myObjects.add(new Pedestal(width/2, height/2, c, this));
+    if (c == Red) myObjects.add(new Pedestal(width/2, height/2 + 22, c, this));
   }
 }

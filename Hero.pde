@@ -14,13 +14,16 @@ class Hero extends GameObject {
   
   //== Hero Upgrades ==
   //Hp
-  int exthp = 0;
+  int exthealth = 0;
   int basehp = 50;
-  int maxhp = basehp + exthp*10;
+  int maxhp = basehp + exthealth*10;
   //Speed
   int extspeed = 0;
   //Damage
   int extdamage = 0;
+  
+  //Ratio between current upgrade types (r/g, g/b, r/b) - used for changing power colour
+  float pratio = 0.5;
   
   //Upgrade points (to spend for upgrades)
   int upgradePoints;
@@ -44,10 +47,13 @@ class Hero extends GameObject {
     
     invTimeLimit = 60;
     
-    lum = 200;
+    lum = 175;
   }
   
-  public void show () {
+  public void show () {       
+    //Updates player lumColor
+    lumColor = currentColor();
+    
     pushMatrix();
     translate(loc.x, loc.y);
     
@@ -75,11 +81,11 @@ class Hero extends GameObject {
     }
     
     //Changes stroke colour the more hp you have
-    //stroke(lerp(White, NGreen6, map(exthp, 0, 4, 0, 1)));
-    stroke(NGreen6, map(exthp, 0, 4, 0, 200));
+    //stroke(lerp(White, Green, map(exthp, 0, 4, 0, 1)));
+    stroke(myHero.currentColor(), map(exthealth, 0, 4, 0, 200));
     fill(lerp(0, 255, map(hp, 0, maxhp, 0.4, 1)));
     
-    sizeX = sizeY = map(exthp, 0, 4, 94, 110);
+    sizeX = sizeY = map(exthealth, 0, 4, 94, 110);
     
     int strokeSize = 8;
     
@@ -94,7 +100,7 @@ class Hero extends GameObject {
         
     fill(Black);
     
-    float exthp_ = map(exthp, 0, 4, 1, 1.15);
+    float exthp_ = map(exthealth, 0, 4, 1, 1.15);
     
     noStroke();
     
@@ -119,12 +125,15 @@ class Hero extends GameObject {
     //Hp stuff
     if (hp > 0) super.act();
     if (hp > maxhp) hp = maxhp;
-    maxhp = basehp + exthp * 10;
+    maxhp = basehp + exthealth * 10;
     
     //Don't allow upgrades to go over limit
     if (extdamage > 4) extdamage = 4;
-    if (exthp > 4) exthp = 4;
+    if (exthealth > 4) exthealth = 4;
     if (extspeed > 4) extspeed = 4;
+    
+    //Change lighting based on hp
+    lum = darknessDist();
     
     //====== Movement ======
     if (upkey) {
@@ -192,9 +201,9 @@ class Hero extends GameObject {
       //Create more particles the faster you are
       int rate = (int) map(extspeed, 0, 4, 35, 5);
       if (frameCount % rate == 0) {
-        myObjects.add(new Splash(Splash.square, loc.x, loc.y, NBlue6, false, 12, 18, 0));
-        myObjects.add(new Splash(Splash.square, loc.x, loc.y, NBlue6, false, 12, 18, 0));
-        myObjects.add(new Splash(Splash.square, loc.x, loc.y, NBlue6, false, 12, 18, 0));
+        myObjects.add(new Splash(Splash.square, loc.x, loc.y, myHero.currentColor(), false, 12, 18, 0));
+        myObjects.add(new Splash(Splash.square, loc.x, loc.y, myHero.currentColor(), false, 12, 18, 0));
+        myObjects.add(new Splash(Splash.square, loc.x, loc.y, myHero.currentColor(), false, 12, 18, 0));
       }
     }
     
@@ -252,9 +261,48 @@ class Hero extends GameObject {
       //amount of time given for particles to spawn + amount of time for particles of dissipate + 20 frame buffer (for player to be able to see empty screen)
       if (frameCount >= deathTime + spawnLimit + Splash.hplimit/Splash.hplossrate + 20) mode = over;      
     }
+    //println(hue(currentColor()));
   }
   
   public void increaseHp(int n) {
-    exthp += n;
+    hp += n;
+  }
+  
+  //Current power colour
+  public color currentColor() {
+    if (extdamage == 0 && exthealth == 0 && extspeed == 0) return White;
+    
+    //Returns mix of both active powers (RY, YB, RB)
+    float pp = 0.0;
+    float sp = 0.0;
+    
+    color a = 0;
+    color b = 0;
+    
+    switch(ftype) {
+      case 1:
+        pp = (float) extdamage;
+        sp = (float) exthealth;
+        a = Red;
+        b = Green;
+        break;
+      case 2:
+        pp = (float) exthealth;
+        sp = (float) extspeed;
+        a = Green;
+        b = Blue;
+        break;
+      case 3:
+        pp = (float) extspeed;
+        sp = (float) extdamage;
+        a = Blue;
+        b = Red;
+        break;
+    }
+        
+    float ratio = 1.0;
+    ratio -= pp/(pp + sp);
+                
+    return mixColor(a, b, ratio);
   }
 }

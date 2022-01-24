@@ -5,7 +5,7 @@ class HealthPoint extends GameObject {
   //Amount restored
   float restVal;
   
-  float speed = 30;
+  float speed = 45;
   
   //Boolean for animation
   boolean targetHero = false;

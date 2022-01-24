@@ -1,6 +1,10 @@
 void playing () {
   //Roll floor type
   if (ftype == 0) typeroll();
+  //if (mousePressed) {
+  //  typeroll();
+  //  println(ftype);
+  //}
   
   background(Black);
     
@@ -142,7 +146,7 @@ void upgradeHealthSq (float x, float y, int t) {
   pushMatrix();
   translate(x, y);
   
-  if (myHero.exthp < t) {
+  if (myHero.exthealth < t) {
     noFill();
   } else {
     fill(NGreen3);
@@ -233,11 +237,12 @@ void explainSq (float x, float y) {
 //== Determine Floor Type ==
 void typeroll () {
   int rand = (int) random(0, 3);
-  if (rand > 2) {
+  if (rand == 0) {
     ftype = 1;
-  } else if (rand > 1) {
+  } else if (rand == 1) {
     ftype = 2;
   } else {
     ftype = 3;
   }
+  
 }

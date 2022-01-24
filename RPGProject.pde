@@ -17,28 +17,26 @@ color NRed2 = #bd0000;
 color NRed3 = #cb0000;
 color NRed4 = #e20000;
 color NRed5 = #ff5b5b;
-color NRed6 = #FF0000;
 
 color NGreen1 = #174c19;
 color NGreen2 = #1f6522;
 color NGreen3 = #277f2a;
 color NGreen4 = #2f9832;
 color NGreen5 = #3eca43;
-color NGreen6 = #00FF00;
+
 
 color NBlue1 = #1f1f66;
 color NBlue2 = #272780;
 color NBlue3 = #2e2e99;
 color NBlue4 = #3e3ecc;
 color NBlue5 = #4d4dff;
-color NBlue6 = #0000FF;
 
 color Black = #000000;
 color White = #FFFFFF;
 color Red = #FF0000;
 color Green = #00FF00;
 color Blue = #0000FF;
-color MYellow = #e1ad01;
+color MGreen = #e1ad01;
 color Gold = #FFD700;
 
 //== Fonts ==
@@ -107,6 +105,8 @@ ModeButton exitButton;
 void setup() {
   size(800, 800, FX2D);
   
+  colorMode(HSB);
+  
   myObjects = new ArrayList<GameObject>();
   myCells = new ArrayList<DarknessCell>();
   mapCells = new ArrayList<MapCell>();
@@ -124,7 +124,7 @@ void setup() {
   
   //-- Main --
   
-  playButton = new ModeButton("Play", 90, playing, Black, White, width - 100, height/2 - 75, 15, NRed6);
+  playButton = new ModeButton("Play", 90, playing, Black, White, width - 100, height/2 - 75, 15, Red);
   
   /*
   
@@ -142,8 +142,8 @@ void setup() {
   
   */
   
-  saveselButton = new ModeButton("Save Select", 35, savesel, Black, White, width/2 - 75, height/2 - 75, 15, NBlue6);
-  upgradeselButton = new ModeButton("Upgrades", 35, upgradesel, Black, White, width/2 - 75, height/2 - 75, 15, NGreen6);
+  saveselButton = new ModeButton("Save Select", 35, savesel, Black, White, width/2 - 75, height/2 - 75, 15, Blue);
+  upgradeselButton = new ModeButton("Upgrades", 35, upgradesel, Black, White, width/2 - 75, height/2 - 75, 15, Green);
 
   //-- Playing --
   
@@ -153,6 +153,7 @@ void setup() {
   myHero = new Hero(); 
   
   currentRoom = new StartingRoom(myHero.roomX, myHero.roomY);
+  //currentRoom = new UpgradeRoom(myHero.roomX, myHero.roomY);
   myRooms.add(currentRoom);
     
   while (dcx != width && dcy != height) {
@@ -335,5 +336,58 @@ boolean boolRand () {
 //== Radius of Light Circle ==
 //Made it outside of the DarknessCell class so it could be used anywhere I needed
 float darknessDist () {
-  return map(myHero.hp, myHero.maxhp, 0, DarknessCell.radius, 90);
+  return map(myHero.hp, myHero.maxhp, 0, 175, 90);
+}
+
+//== Mix Colours ==
+//Function for mixing colours
+color mixColor(color a_, color b_, float ratio) {
+  float a = hue(a_);
+  float b = hue(b_);
+    
+  if (a == b) return color(a, 255, 255);
+  
+    
+  
+  //Stumped me for a while, turns out processing inexplicably treats hue as being from 0-255 rather than 0-360
+  if (a > b + 255/2 || b > a + 255/2) {
+    if (a > b + 255/2) {
+      float th = (255 - a - b) * ratio + a;
+      
+      return color(th, 255, 255);
+    } else if (b > a + 255/2) {
+      float th = (255 - a - b) * ratio + b;
+      
+      return color(th, 255, 255);
+    }
+  }
+  
+  if (a > b) return color((a - b) * ratio + b, 255, 255);
+  if (b > a) return color((b - a) * ratio + a, 255, 255);
+  
+  return Black;
+}  
+
+float mixColorFloat(float a_, float b_, float ratio) {
+  float a = a_;
+  float b = b_;
+  
+  if (a == b) return a;
+  
+  if (a > b + 127.5 || b > a + 127.5) {
+    if (a > b + 127.5) {
+      float th = (255 - a - b) * ratio + a;
+      
+      return th;
+    } else if (b > a + 127.5) {
+      float th = (255 - a - b) * ratio + b;
+      
+      return th;
+    }
+  }
+  
+  if (a > b) return (a - b) * ratio + b;
+  if (b > a) return (b - a) * ratio + b;
+  
+  return 0;
 }

@@ -1,15 +1,31 @@
-class Lamp extends GameObject { 
-  color c;
-  
+class Lamp extends GameObject {   
   //Used for making light shift in intensity, don't really know what to call the effect
   int target = 225;
   float intensity = 225;
   
+  int type;
+  color c;
+  
   Lamp (float x_, float y_, color c_, Room objRoom_) {
     super(objRoom_);
     
-    c = c_;
-        
+    type = c_;
+    
+    switch (type) {
+      case 1:
+        lumColor = 0;
+        c = Red;
+        break;
+      case 2:
+        lumColor = 85;
+        c = Green;
+        break;
+      case 3:
+        lumColor = 170;
+        c = Blue;
+        break;
+    }
+            
     solid = true;
     
     loc = new PVector(x_, y_);
@@ -19,23 +35,14 @@ class Lamp extends GameObject {
     lum = 180;
     
     solid = true;
-    
-    //Makes things easier with darknesscell calcs
-    if (c == NRed6) {
-      hp = 77777;
-    } else if (c == NGreen6) {
-      hp = 88888;
-    } else {
-      hp = 99999;
-    }
   }
   
   void show() {
     noStroke();
 
-    fill(c, intensity);
+    fill(lumColor, 255, 255, intensity);
         
-    ellipse(loc.x, loc.y, 100, 100);
+    ellipse(loc.x, loc.y, sizeX, sizeY);
     
     //If current brightness (intensity) is higher than the target it goes down, if not it goes up
     if (intensity == target) {
@@ -54,7 +61,7 @@ class Lamp extends GameObject {
     
     fill(#050505);
     
-    ellipse(loc.x, loc.y, 75, 75);
+    ellipse(loc.x, loc.y, sizeX*0.75, sizeY*0.75);
   }
   
   void hit (float ad) {

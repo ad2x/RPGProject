@@ -127,7 +127,8 @@ class Splash extends GameObject {
   
   public void show () {
     //Too lazy to put in constructors
-    lum = 50;
+    lum = 35;
+    if (frameCount % 10 == 0) lumColor = c;
     
     pushMatrix();
     translate(loc.x, loc.y);

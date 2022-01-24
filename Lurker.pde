@@ -14,7 +14,7 @@ class Lurker extends MeleeEnemy {
   }
   
   void act () {
-    if (dist(myHero.loc.x, myHero.loc.y, loc.x, loc.y) >= darknessDist()) {
+    if (dist(myHero.loc.x, myHero.loc.y, loc.x, loc.y) >= myHero.lum) {
       vel.setMag(0);
     }
     

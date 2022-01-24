@@ -1,4 +1,3 @@
-//Basic melee class, is big and strong but slow
 class MeleeEnemy extends GameObject {
   
   //For hit cd

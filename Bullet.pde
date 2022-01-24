@@ -11,6 +11,7 @@ class Bullet extends GameObject {
     c = f;
     sizeX = sizeY = s;
     
+    lumColor = myHero.currentColor();
   }
   
   void show () {
@@ -21,7 +22,8 @@ class Bullet extends GameObject {
     sizeX = sizeY = map(myHero.extdamage, 0, 4, 18, 24);
     
     //Changes colour based on extdamage
-    color t = (int) lerp(c, NRed6, map(myHero.extdamage, 0, 4, 0, 1));
+    color t = myHero.currentColor();
+    lumColor = t;
     
     noStroke();
     fill(t);
@@ -60,9 +62,9 @@ class Bullet extends GameObject {
             float sizebonus = map(myHero.extdamage, 0, 4, 0, 7);
             
             //Changes colour based on extdamage
-            color t = (int) lerp(c, NRed6, map(myHero.extdamage, 0, 4, 0, 1));
+            color t = (int) lerp(c, Red, map(myHero.extdamage, 0, 4, 0, 1));
             
-            myObjects.add(new Splash(Splash.circle, loc.x, loc.y, t, false, 5 + sizebonus, 10 + sizebonus));
+            myObjects.add(new Splash(Splash.circle, loc.x, loc.y, myHero.currentColor(), false, 5 + sizebonus, 10 + sizebonus));
             
             i++;
           }
